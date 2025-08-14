@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IoT Sensor Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; }
+    th { background-color: #f4f4f4; }
+  </style>
+</head>
+<body>
+  <h2>IoT Sensor Data</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Timestamp</th>
+        <th>Temperature (°C)</th>
+        <th>Humidity (%)</th>
+      </tr>
+    </thead>
+    <tbody id="data-table"></tbody>
+  </table>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Import Firebase modules from CDN
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyAxbdsP6dcyTuorLv6VWY_ZJqiGd2n6Pt4",
+      authDomain: "iot-esp-data.firebaseapp.com",
+      databaseURL: "https://iot-esp-data-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "iot-esp-data",
+      storageBucket: "iot-esp-data.firebasestorage.app",
+      messagingSenderId: "683373734391",
+      appId: "1:683373734391:web:34941228888b44eefe66f2",
+      measurementId: "G-4L4ZLHH83Y"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Table body
+    const tableBody = document.getElementById("data-table");
+
+    // Listen for changes in sensor_logs
+    onValue(ref(db, "sensor_logs"), (snapshot) => {
+      tableBody.innerHTML = "";
+      snapshot.forEach((childSnapshot) => {
+        const data = childSnapshot.val();
+        const row = `<tr>
+          <td>${childSnapshot.key}</td>
+          <td>${data.temperature}</td>
+          <td>${data.humidity}</td>
+        </tr>`;
+        tableBody.innerHTML += row;
+      });
+    });
+  </script>
+</body>
+</html>
