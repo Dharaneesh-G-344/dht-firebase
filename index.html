@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
   <title>Live DHT11 Data</title>
@@ -66,5 +66,127 @@
 
   <h2>📜 Full History (Latest First)</h2>
   <table id="history"></table>
+</body>
+</html> -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ESP8266 Firebase Data</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
+<style>
+    body {
+        background-color: #121212;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 20px;
+    }
+    h1 {
+        color: #00bcd4;
+    }
+    button {
+        background-color: #00bcd4;
+        border: none;
+        padding: 10px 20px;
+        margin: 10px;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    button:hover {
+        background-color: #0097a7;
+    }
+    table {
+        margin: auto;
+        border-collapse: collapse;
+        width: 80%;
+        background-color: #1e1e1e;
+    }
+    th, td {
+        border: 1px solid #333;
+        padding: 10px;
+        text-align: center;
+    }
+    th {
+        background-color: #333;
+        color: #00bcd4;
+    }
+</style>
+</head>
+<body>
+
+<h1>ESP8266 Firebase Monitor</h1>
+<button onclick="loadData('latest')">Latest Only</button>
+<button onclick="loadData('all')">Full History</button>
+
+<table>
+    <thead>
+        <tr>
+            <th>Timestamp</th>
+            <th>Temperature (°C)</th>
+            <th>Humidity (%)</th>
+        </tr>
+    </thead>
+    <tbody id="data-table">
+        <tr><td colspan="3">Click a button to load data...</td></tr>
+    </tbody>
+</table>
+
+<script>
+  // Firebase config (same as in ESP code)
+  const firebaseConfig = {
+    apiKey: "AIzaSyAxbdsP6dcyTuorLv6VWY_ZJqiGd2n6Pt4",
+    authDomain: "iot-esp-data.firebaseapp.com",
+    databaseURL: "https://iot-esp-data-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "iot-esp-data",
+    storageBucket: "iot-esp-data.firebasestorage.app",
+    messagingSenderId: "683373734391",
+    appId: "1:683373734391:web:34941228888b44eefe66f2",
+    measurementId: "G-4L4ZLHH83Y"
+  };
+
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  function loadData(mode) {
+    let refPath = mode === 'latest' ? '/sensor_logs/latest' : '/sensor_logs';
+    db.ref(refPath).once('value', snapshot => {
+        let data = snapshot.val();
+        let tableBody = document.getElementById('data-table');
+        tableBody.innerHTML = "";
+
+        if (!data) {
+            tableBody.innerHTML = "<tr><td colspan='3'>No data found</td></tr>";
+            return;
+        }
+
+        if (mode === 'latest') {
+            tableBody.innerHTML += `<tr>
+                <td>${data.timestamp || 'N/A'}</td>
+                <td>${data.temperature}</td>
+                <td>${data.humidity}</td>
+            </tr>`;
+        } else {
+            // Sort keys in reverse to show latest first
+            let keys = Object.keys(data).filter(k => k !== "latest").sort((a, b) => b - a);
+            keys.forEach(key => {
+                let entry = data[key];
+                tableBody.innerHTML += `<tr>
+                    <td>${entry.timestamp || key}</td>
+                    <td>${entry.temperature}</td>
+                    <td>${entry.humidity}</td>
+                </tr>`;
+            });
+        }
+    });
+  }
+</script>
+
 </body>
 </html>
