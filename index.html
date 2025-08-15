@@ -371,7 +371,7 @@
 </head>
 <body>
 
-<h1>🌐 ESP8266 Firebase Monitor</h1>
+<h1>Data From Database</h1>
 <button onclick="setMode('latest')">Latest Only</button>
 <button onclick="setMode('all')">Full History</button>
 
@@ -389,7 +389,6 @@
 </table>
 
 <script>
-  // Firebase config
   var firebaseConfig = {
     apiKey: "AIzaSyAxbdsP6dcyTuorLv6VWY_ZJqiGd2n6Pt4",
     authDomain: "iot-esp-data.firebaseapp.com",
@@ -409,7 +408,7 @@
 
   function setMode(mode) {
     currentMode = mode;
-    if (currentRef) currentRef.off(); // stop old listener
+    if (currentRef) currentRef.off();
     loadData();
   }
 
@@ -433,7 +432,7 @@
                 <td>${data.humidity}</td>
             </tr>`;
         } else {
-            let keys = Object.keys(data).sort((a, b) => b - a);
+            let keys = Object.keys(data).filter(k => k !== "latest").sort((a, b) => b - a);
             keys.forEach(key => {
                 let entry = data[key];
                 tableBody.innerHTML += `<tr>
@@ -446,7 +445,6 @@
     });
   }
 
-  // Start with latest
   loadData();
 </script>
 
