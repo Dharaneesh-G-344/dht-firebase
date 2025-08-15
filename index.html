@@ -311,46 +311,67 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Data From Firebase Database</title>
+<title>Firebase IoT Dashboard</title>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <style>
     body {
-        background-color: #121212;
+        margin: 0;
+        background: linear-gradient(135deg, #0a0f13, #031f24, #002b36);
         color: #fff;
-        font-family: Arial, sans-serif;
+        font-family: 'Segoe UI', Tahoma, sans-serif;
         text-align: center;
         padding: 20px;
     }
-    h1 { color: #00bcd4; }
+    h1 {
+        color: #00e5ff;
+        text-shadow: 0 0 15px rgba(0, 229, 255, 0.8);
+    }
     button {
-        background-color: #00bcd4;
+        background: linear-gradient(45deg, #00e5ff, #00bcd4);
         border: none;
-        padding: 10px 20px;
+        padding: 10px 25px;
         margin: 10px;
         color: #fff;
         font-size: 16px;
+        font-weight: bold;
         cursor: pointer;
-        border-radius: 5px;
+        border-radius: 30px;
+        transition: 0.3s;
+        box-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
     }
-    button:hover { background-color: #0097a7; }
+    button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(0, 229, 255, 1);
+    }
     table {
         margin: auto;
         border-collapse: collapse;
-        width: 80%;
-        background-color: #1e1e1e;
+        width: 85%;
+        background: rgba(20, 20, 20, 0.6);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 0 25px rgba(0, 229, 255, 0.3);
+        backdrop-filter: blur(10px);
     }
     th, td {
-        border: 1px solid #333;
-        padding: 10px;
+        border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+        padding: 12px;
         text-align: center;
     }
-    th { background-color: #333; color: #00bcd4; }
+    th {
+        background: rgba(0, 229, 255, 0.15);
+        color: #00e5ff;
+        font-size: 18px;
+    }
+    tr:hover {
+        background: rgba(0, 229, 255, 0.05);
+    }
 </style>
 </head>
 <body>
 
-<h1>ESP8266 Firebase Monitor</h1>
+<h1>🌐 ESP8266 Firebase Monitor</h1>
 <button onclick="setMode('latest')">Latest Only</button>
 <button onclick="setMode('all')">Full History</button>
 
